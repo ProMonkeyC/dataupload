@@ -1,0 +1,8 @@
+nohup java -cp data-upload-1.0-SNAPSHOT.jar com.asiainfo.test.DbInsert start &
+
+
+nohup java -cp data-upload-1.0-SNAPSHOT.jar com.asiainfo.syncInitialize.SyncInitializeMain start &
+
+nohup java -cp data-upload-1.0-SNAPSHOT.jar com.asiainfo.syncInitialize.QueryData start &
+
+nohup java -cp data-upload-1.0-SNAPSHOT.jar com.asiainfo.splitData.SplitData start &

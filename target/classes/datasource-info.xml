@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--mysql\u6570\u636e\u6e90 -->
+    <bean id="dataSourceInfo" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${info_dev.driver}"/>
+        <property name="url" value="${info_dev.url}"/>
+        <property name="username" value="${info_dev.user}"/>
+        <property name="password" value="${info_dev.password}"/>
+        <!--initialSize: \u521d\u59cb\u5316\u8fde\u63a5-->
+        <property name="initialSize" value="${info_dev.initialSize}"/>
+        <!--maxIdle: \u6700\u5927\u7a7a\u95f2\u8fde\u63a5-->
+        <property name="maxIdle" value="${info_dev.maxIdle}"/>
+        <!--minIdle: \u6700\u5c0f\u7a7a\u95f2\u8fde\u63a5-->
+        <property name="minIdle" value="${info_dev.minIdle}"/>
+        <!--maxActive: \u6700\u5927\u8fde\u63a5\u6570\u91cf-->
+        <property name="maxActive" value="${info_dev.maxActive}"/>
+        <!--removeAbandoned: \u662f\u5426\u81ea\u52a8\u56de\u6536\u8d85\u65f6\u8fde\u63a5-->
+        <property name="removeAbandoned" value="${info_dev.removeAbandoned}"/>
+        <!--removeAbandonedTimeout: \u8d85\u65f6\u65f6\u95f4(\u4ee5\u79d2\u6570\u4e3a\u5355\u4f4d)-->
+        <property name="removeAbandonedTimeout" value="${info_dev.removeAbandonedTimeout}"/>
+        <!--maxWait: \u8d85\u65f6\u7b49\u5f85\u65f6\u95f4\u4ee5\u6beb\u79d2\u4e3a\u5355\u4f4d-->
+        <property name="maxWait" value="${info_dev.maxWait}"/>
+        <property name= "testWhileIdle" value="${info_dev.testWhileIdle}" />
+        <property name= "testOnBorrow" value="${info_dev.testOnBorrow}" />
+        <property name= "testOnReturn" value="${info_dev.testOnReturn}" />
+        <property name= "validationQuery" value="${info_dev.validationQuery}" />
+        <property name= "timeBetweenEvictionRunsMillis" value="${info_dev.timeBetweenEvictionRunsMillis}" />
+        <property name= "numTestsPerEvictionRun" value="${info_dev.numTestsPerEvictionRun}" />
+        <property name="minEvictableIdleTimeMillis" value="${info_dev.minEvictableIdleTimeMillis}" />
+    </bean>
+
+    <!-- (\u4e8b\u52a1\u7ba1\u7406)transaction manager, use JtaTransactionManager for global tx -->
+    <bean id="txManagerInfo" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSourceInfo"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="txManagerInfo"/>
+
+    <bean id="queryJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSourceInfo"/>
+    </bean>
+
+    <bean id="transactionJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSourceInfo"/>
+    </bean>
+
+    <bean id="info" class="com.asiainfo.bpc.service.SqlCodeService">
+        <constructor-arg ref="dataSourceCen"/>
+        <constructor-arg ref="dataSourceInfo"/>
+        <constructor-arg name="maxThread" value="${info_dev.maxThread}"/>
+        <constructor-arg name="hour" value="${info_dev.hour}"/>
+        <constructor-arg name="capacity" value="${info_dev.capacity}"/>
+        <constructor-arg name="maxNum" value="${info_dev.maxNum}"/>
+    </bean>
+</beans>
